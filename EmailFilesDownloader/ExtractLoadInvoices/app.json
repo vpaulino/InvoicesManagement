@@ -1,0 +1,19 @@
+{
+  "BaseAdressDestination": "invoices",
+  "applicationName": "InvoiceDownloader",
+
+  "googleCredentials": {
+    "Values": {
+      "credentialsLocation": "credentials.json",
+      "tokenDestination": "token.json"
+    }
+  },
+  "emailsAttachmentsDestination": {
+    "Values": {
+
+      "noreply.simar@aquamatrix.pt": "aguas"
+
+    }
+  }
+
+}
