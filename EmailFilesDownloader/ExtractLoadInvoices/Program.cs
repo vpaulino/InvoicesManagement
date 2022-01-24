@@ -25,7 +25,7 @@ string authenticatedTokenFileLocation = googleCredentials.Values.GetValueOrDefau
 string ApplicationName = Configuration.GetValue<string>("applicationName");
 
 
-string[] Scopes = { GmailService.Scope.GmailReadonly };
+string[] Scopes = { GmailService.Scope.GmailReadonly,  GmailService.Scope.GmailLabels, GmailService.Scope.GmailModify };
 
 UserCredential credential;
 
@@ -35,12 +35,13 @@ using (var stream =
     // The file token.json stores the user's access and refresh tokens, and is created
     // automatically when the authorization flow completes for the first time.
     
-    credential = GoogleWebAuthorizationBroker.AuthorizeAsync(
+    credential = await GoogleWebAuthorizationBroker.AuthorizeAsync(
         GoogleClientSecrets.FromStream(stream).Secrets,
         Scopes,
         "user",
         CancellationToken.None,
-        new FileDataStore(authenticatedTokenFileLocation, true)).Result;
+        new FileDataStore(authenticatedTokenFileLocation, true));
+
     Console.WriteLine("Credential file saved to: " + authenticatedTokenFileLocation);
 }
 
@@ -59,7 +60,7 @@ foreach (var key in emailsFilesDestinationMapper.Values.Keys)
     var emailListRequest = gmailService.Users.Messages.List("me");
     emailListRequest.LabelIds = "INBOX";
     emailListRequest.IncludeSpamTrash = false;
-    emailListRequest.Q = $"from:{key}";
+    emailListRequest.Q = $"from:{key}, in:unread";
 
     //emailListRequest.Q = "is:unread"; // This was added because I only wanted unread emails...
 
@@ -72,6 +73,7 @@ foreach (var key in emailsFilesDestinationMapper.Values.Keys)
         foreach (var message in emailListResponse.Messages)
         {
             Message messageFilled = gmailService.Users.Messages.Get("me", message.Id).Execute();
+
 
             if (messageFilled.Payload.Parts == null)
                 continue;
@@ -98,6 +100,31 @@ foreach (var key in emailsFilesDestinationMapper.Values.Keys)
                     Directory.CreateDirectory(Environment.CurrentDirectory + "/" + folderName);
                 }
                 File.WriteAllBytes(Path.Combine(Environment.CurrentDirectory+"/"+folderName , part.Filename), data);
+            }
+
+            ModifyMessageRequest removeUnreadLabelRequest = new ModifyMessageRequest();
+            removeUnreadLabelRequest.RemoveLabelIds = new string[] { "UNREAD" } ;
+
+            try
+            {
+                gmailService.Users.Messages.Modify(removeUnreadLabelRequest, "me", message.Id).Execute();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("An error occurred: " + e.Message);
+            }
+
+
+            ModifyMessageRequest addHomeExpensesLabel = new ModifyMessageRequest();
+            addHomeExpensesLabel.AddLabelIds = new string[] { "HomeExpenses" };
+
+            try
+            {
+                gmailService.Users.Messages.Modify(addHomeExpensesLabel, "me", message.Id).Execute();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("An error occurred: " + e.Message);
             }
         }
     }
