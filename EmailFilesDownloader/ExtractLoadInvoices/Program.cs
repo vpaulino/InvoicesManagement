@@ -112,20 +112,7 @@ foreach (var key in emailsFilesDestinationMapper.Values.Keys)
             catch (Exception e)
             {
                 Console.WriteLine("An error occurred: " + e.Message);
-            }
-
-
-            ModifyMessageRequest addHomeExpensesLabel = new ModifyMessageRequest();
-            addHomeExpensesLabel.AddLabelIds = new string[] { "HomeExpenses" };
-
-            try
-            {
-                gmailService.Users.Messages.Modify(addHomeExpensesLabel, "me", message.Id).Execute();
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine("An error occurred: " + e.Message);
-            }
+            } 
         }
     }
 }
