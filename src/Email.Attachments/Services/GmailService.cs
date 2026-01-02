@@ -124,8 +124,8 @@ public class GmailService : IEmailService
             PartId = gmailPart.PartId ?? string.Empty,
             MimeType = gmailPart.MimeType ?? string.Empty,
             Filename = gmailPart.Filename ?? string.Empty,
-            Headers = gmailPart.Headers?.ToDictionary(h => h.Name ?? string.Empty, h => h.Value ?? string.Empty) 
-                      ?? new Dictionary<string, string>(),
+            Headers = gmailPart.Headers?.Select(h => new KeyValuePair<string, string>(h.Name ?? string.Empty, h.Value ?? string.Empty)) 
+                      ?? Enumerable.Empty<KeyValuePair<string, string>>(),
             Parts = gmailPart.Parts?.Select(MapToEmailMessagePart) ?? Enumerable.Empty<EmailMessagePart>()
         };
 
