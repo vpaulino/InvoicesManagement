@@ -1,0 +1,27 @@
+{
+  "BaseAdressDestination": "invoices",
+  "applicationName": "InvoiceDownloader",
+
+  "googleCredentials": {
+    "Values": {
+      "credentialsLocation": "Credentials.json",
+      "tokenDestination": "token.json"
+    }
+  },
+  "emailsAttachmentsDestination": {
+    "Values": {
+      "fatura@servicoLuz.pt": "Luz",
+      "noreply@servicoagua.pt": "Agua",
+      "noreply@serviconetvoz.pt": "TVNetVoz",
+      "noreply@servicoginasio.pt": "Ginasio"
+    }
+  },
+  "storage": {
+    "defaultStorageType": "FileSystem",
+    "fileSystem": {
+      "baseDirectory": "./invoices",
+      "defaultNamingStrategy": "WithDateAndSender",
+      "createVendorSubfolders": true
+    }
+  }
+}
