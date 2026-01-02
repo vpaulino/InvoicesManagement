@@ -9,7 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [2.0.0] - TBD
 
-### ⚠️ Breaking Changes
+### Breaking Changes
 - **Service Registration:** Renamed `AddEmailFilesDownloader()` to `AddGmailFilesDownloader()` to explicitly indicate Gmail provider
 - **Models:** Introduced provider-agnostic email models (`EmailMessage`, `EmailMessageDetails`, `AttachmentData`, `EmailMessagePart`)
 - **IEmailService:** Updated to return provider-agnostic models instead of Gmail-specific types
