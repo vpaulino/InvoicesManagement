@@ -17,7 +17,7 @@ public class AttachmentDownloader : IAttachmentDownloader
     {
         var attachmentBody = await _gmailService.GetAttachmentAsync(messageId, attachmentId);
         
-        var data = attachmentBody.Data.DecodeBase64Url();
+        var data = attachmentBody.Data.LocalDecodeBase64Url();
 
         return new EmailAttachment
         {

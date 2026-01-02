@@ -2,7 +2,7 @@ namespace ExtractLoadInvoices.Extensions;
 
 public static class Base64UrlExtensions
 {
-    public static byte[] DecodeBase64Url(this string base64UrlString)
+    public static byte[] LocalDecodeBase64Url(this string base64UrlString)
     {
         // Converting from RFC 4648 base64url to base64 encoding
         // see http://en.wikipedia.org/wiki/Base64#Implementations_and_history
