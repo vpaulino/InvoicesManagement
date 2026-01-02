@@ -2,6 +2,7 @@ using Google.Apis.Gmail.v1;
 using Google.Apis.Gmail.v1.Data;
 using ExtractLoadInvoices.Models;
 using GmailApi = Google.Apis.Gmail.v1;
+using System.Globalization;
 
 namespace ExtractLoadInvoices.Services;
 
@@ -105,7 +106,7 @@ public class GmailService : IEmailService
                         details.Subject = header.Value ?? string.Empty;
                         break;
                     case "date":
-                        if (DateTime.TryParse(header.Value, out var date))
+                        if (DateTime.TryParse(header.Value, CultureInfo.InvariantCulture, DateTimeStyles.None, out var date))
                         {
                             details.Date = date;
                         }
