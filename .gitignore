@@ -353,3 +353,5 @@ MigrationBackup/
 /EmailFilesDownloader/ExtractLoadInvoices/app.development.json
 /EmailFilesDownloader/ConsolidateEmailInvoices/Credentials.json
 /EmailFilesDownloader/ConsolidateEmailInvoices/credentials.json
+/src/ConsolidateEmailInvoices/app.development.json
+/src/ConsolidateEmailInvoices/Credentials.json
