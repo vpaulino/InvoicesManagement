@@ -13,7 +13,7 @@ on:
 
 env:
   DOTNET_VERSION: '10.0.x'
-  PROJECT_PATH: 'EmailFilesDownloader/Email.Attachments/Email.Attachments.csproj'
+  PROJECT_PATH: 'src/Email.Attachments/Email.Attachments.csproj'
   PACKAGE_OUTPUT_DIR: ${{ github.workspace }}/output
   NUGET_SOURCE: https://api.nuget.org/v3/index.json
 

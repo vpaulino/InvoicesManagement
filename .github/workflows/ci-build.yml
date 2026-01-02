@@ -4,17 +4,17 @@ on:
   push:
     branches: [ main, master, develop, features/** ]
     paths:
-      - 'EmailFilesDownloader/Email.Attachments/**'
+      - 'src/Email.Attachments/**'
       - '.github/workflows/ci-build.yml'
   pull_request:
     branches: [ main, master, develop ]
     paths:
-      - 'EmailFilesDownloader/Email.Attachments/**'
+      - 'src/Email.Attachments/**'
       - '.github/workflows/ci-build.yml'
 
 env:
   DOTNET_VERSION: '10.0.x'
-  PROJECT_PATH: 'EmailFilesDownloader/Email.Attachments/Email.Attachments.csproj'
+  PROJECT_PATH: 'src/Email.Attachments/Email.Attachments.csproj'
 
 jobs:
   build:
