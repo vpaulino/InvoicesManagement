@@ -161,6 +161,37 @@ The `app.json` configuration format remains unchanged:
 }
 ```
 
+### Setting Up Google OAuth Credentials
+
+**IMPORTANT**: The `Credentials.json` file contains sensitive OAuth credentials and should NEVER be committed to version control.
+
+1. **Create OAuth Credentials in Google Cloud Console**:
+   - Go to [Google Cloud Console](https://console.cloud.google.com/)
+   - Create or select a project
+   - Enable the Gmail API
+   - Create OAuth 2.0 credentials (Desktop application type)
+   - Download the credentials JSON file
+
+2. **Set Up Local Credentials**:
+   - Copy `Credentials.json.example` to `Credentials.json`
+   - Replace the placeholder values with your actual credentials from Google Cloud Console
+   - The file is already in `.gitignore` and will not be committed
+
+3. **Credentials File Format**:
+   ```json
+   {
+     "installed": {
+       "client_id": "YOUR_CLIENT_ID.apps.googleusercontent.com",
+       "project_id": "YOUR_PROJECT_ID",
+       "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+       "token_uri": "https://oauth2.googleapis.com/token",
+       "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+       "client_secret": "YOUR_CLIENT_SECRET",
+       "redirect_uris": ["http://localhost"]
+     }
+   }
+   ```
+
 ## ?? Testing
 
 Each component can now be unit tested independently:
