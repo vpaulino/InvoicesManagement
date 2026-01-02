@@ -108,9 +108,14 @@ public class FileSystemAttachmentPersistenceManager : IAttachmentPersistenceMana
         return await File.ReadAllBytesAsync(storageReference);
     }
 
+    /// <summary>
+    /// Gets an attachment as a stream for memory-efficient reading.
+    /// The caller is responsible for disposing the returned stream.
+    /// </summary>
     public Task<Stream> GetAttachmentStreamAsync(string storageReference)
     {
-        return Task.FromResult<Stream>(new FileStream(storageReference, FileMode.Open, FileAccess.Read));
+        // Caller owns and must dispose the returned stream
+        return Task.FromResult<Stream>(File.OpenRead(storageReference));
     }
 
     public Task<bool> ExistsAsync(string storageReference)
