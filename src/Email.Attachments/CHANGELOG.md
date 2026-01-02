@@ -9,14 +9,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [2.0.0] - TBD
 
-### ?? Breaking Changes
+### ⚠️ Breaking Changes
 - **Service Registration:** Renamed `AddEmailFilesDownloader()` to `AddGmailFilesDownloader()` to explicitly indicate Gmail provider
 - **Models:** Introduced provider-agnostic email models (`EmailMessage`, `EmailMessageDetails`, `AttachmentData`, `EmailMessagePart`)
 - **IEmailService:** Updated to return provider-agnostic models instead of Gmail-specific types
 - **EmailQuery:** Converted to abstract base class; use `GmailEmailQuery` for Gmail-specific queries
 - **Service Names:** Renamed `GmailServiceWrapper` to `GmailService` for cleaner naming
 
-### ? Added
+### ✨ Added
 - Multi-provider architecture with provider-agnostic core interfaces
 - `EmailMessage` - Provider-agnostic message representation
 - `EmailMessageDetails` - Detailed message with parsed headers
@@ -26,13 +26,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `GmailEmailQuery` - Gmail-specific query implementation
 - Automatic mapping between Gmail API models and provider-agnostic models
 
-### ?? Changed
+### 🔄 Changed
 - `IEmailService` now returns provider-agnostic types
 - `IAttachmentFilter` works with `EmailMessagePart` instead of Gmail `MessagePart`
 - `GmailService` includes mapping logic from Gmail API to domain models
 - Service registration explicitly requires Gmail configuration
 
-### ?? Migration Guide (v1.x ? v2.0)
+### 📖 Migration Guide (v1.x → v2.0)
 
 #### Service Registration
 ```csharp
@@ -62,12 +62,12 @@ var messages = await emailService.GetEmailsAsync(gmailQuery);
 // messages is now IEnumerable<EmailMessage>
 ```
 
-### ?? Benefits of v2.0
-- ? Prepared for multiple email providers (Outlook, IMAP, etc.)
-- ? Cleaner separation of concerns
-- ? High-level APIs remain provider-agnostic
-- ? Explicit provider selection at registration
-- ? No Gmail types leaked into business logic
+### ✨ Benefits of v2.0
+- ✅ Prepared for multiple email providers (Outlook, IMAP, etc.)
+- ✅ Cleaner separation of concerns
+- ✅ High-level APIs remain provider-agnostic
+- ✅ Explicit provider selection at registration
+- ✅ No Gmail types leaked into business logic
 
 ## [1.0.0] - 2024-12-15
 
