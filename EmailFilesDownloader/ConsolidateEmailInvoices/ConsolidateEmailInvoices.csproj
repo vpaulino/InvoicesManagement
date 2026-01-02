@@ -19,6 +19,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Email.Attachments\Email.Attachments.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
     <None Update="app.development.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

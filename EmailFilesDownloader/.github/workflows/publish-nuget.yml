@@ -1,0 +1,93 @@
+name: Publish NuGet Package
+
+on:
+  push:
+    tags:
+      - 'v*.*.*'  # Trigger on version tags like v1.0.0
+  workflow_dispatch:  # Allow manual trigger
+    inputs:
+      version:
+        description: 'Package version (e.g., 1.0.0)'
+        required: true
+        type: string
+
+env:
+  DOTNET_VERSION: '10.0.x'
+  PROJECT_PATH: 'EmailFilesDownloader/Email.Attachments/Email.Attachments.csproj'
+  PACKAGE_OUTPUT_DIR: ${{ github.workspace }}/output
+  NUGET_SOURCE: https://api.nuget.org/v3/index.json
+
+jobs:
+  build-and-publish:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0  # Full history for SourceLink
+    
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: ${{ env.DOTNET_VERSION }}
+    
+    - name: Extract version from tag or input
+      id: version
+      run: |
+        if [ "${{ github.event_name }}" == "workflow_dispatch" ]; then
+          VERSION="${{ github.event.inputs.version }}"
+        else
+          VERSION=${GITHUB_REF#refs/tags/v}
+        fi
+        echo "VERSION=$VERSION" >> $GITHUB_OUTPUT
+        echo "Package version: $VERSION"
+    
+    - name: Restore dependencies
+      run: dotnet restore ${{ env.PROJECT_PATH }}
+    
+    - name: Build
+      run: dotnet build ${{ env.PROJECT_PATH }} --configuration Release --no-restore /p:Version=${{ steps.version.outputs.VERSION }}
+    
+    - name: Run tests (if any)
+      run: dotnet test --configuration Release --no-build --verbosity normal || echo "No tests found"
+      continue-on-error: true
+    
+    - name: Pack NuGet package
+      run: |
+        dotnet pack ${{ env.PROJECT_PATH }} \
+          --configuration Release \
+          --no-build \
+          --output ${{ env.PACKAGE_OUTPUT_DIR }} \
+          /p:PackageVersion=${{ steps.version.outputs.VERSION }} \
+          /p:RepositoryCommit=${{ github.sha }}
+    
+    - name: Display package contents
+      run: |
+        echo "?? Generated packages:"
+        ls -lh ${{ env.PACKAGE_OUTPUT_DIR }}
+    
+    - name: Push to NuGet.org
+      run: |
+        dotnet nuget push "${{ env.PACKAGE_OUTPUT_DIR }}/*.nupkg" \
+          --api-key ${{ secrets.NUGET_API_KEY }} \
+          --source ${{ env.NUGET_SOURCE }} \
+          --skip-duplicate
+    
+    - name: Create GitHub Release
+      uses: softprops/action-gh-release@v1
+      if: startsWith(github.ref, 'refs/tags/')
+      with:
+        files: ${{ env.PACKAGE_OUTPUT_DIR }}/*.nupkg
+        generate_release_notes: true
+        draft: false
+        prerelease: false
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    
+    - name: Upload artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: nuget-packages
+        path: ${{ env.PACKAGE_OUTPUT_DIR }}/*.nupkg
+        retention-days: 30

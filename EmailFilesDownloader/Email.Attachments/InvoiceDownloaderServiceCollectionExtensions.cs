@@ -22,7 +22,7 @@ public static class InvoiceDownloaderServiceCollectionExtensions
     /// <summary>
     /// Registers all invoice downloader services into the dependency injection container
     /// </summary>
-    public static IServiceCollection AddInvoiceDownloader(
+    public static IServiceCollection AddEmailFilesDownloader(
         this IServiceCollection services, 
         IConfiguration configuration)
     {

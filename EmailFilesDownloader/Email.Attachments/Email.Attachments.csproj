@@ -1,0 +1,56 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    
+    <!-- NuGet Package Metadata -->
+    <PackageId>Email.Attachments</PackageId>
+    <Version>1.0.0</Version>
+    <Authors>vpaulino</Authors>
+    <Company>vpaulino</Company>
+    <Product>Email.Attachments</Product>
+    <Description>Comprehensive email attachment extraction and management library for .NET. Extract, filter, and persist email attachments from Gmail with pluggable storage backends, rich date filtering, and use-case oriented API.</Description>
+    <PackageTags>email;gmail;attachments;extraction;automation;invoice;pdf;storage;oauth;api</PackageTags>
+    <PackageProjectUrl>https://github.com/vpaulino/InvoicesManagement</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/vpaulino/InvoicesManagement</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageReadmeFile>PACKAGE_README.md</PackageReadmeFile>
+    <PackageReleaseNotes>
+      Version 1.0.0:
+      - Initial release
+      - Use-case oriented API for business-focused email attachment management
+      - Pluggable storage architecture (FileSystem, extensible for Azure Blob, AWS S3)
+      - Comprehensive date filtering and period abstractions
+      - Gmail OAuth 2.0 integration
+      - Full dependency injection support
+      - Memory-efficient streaming for large attachments
+    </PackageReleaseNotes>
+    
+    <!-- Build Configuration -->
+    <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
+    <EmbedUntrackedSources>true</EmbedUntrackedSources>
+    <IncludeSymbols>true</IncludeSymbols>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Google.Apis.Gmail.v1" Version="1.55.0.2510" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Binder" Version="8.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.EnvironmentVariables" Version="8.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="8.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Options" Version="8.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Hosting" Version="8.0.0" />
+    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="8.0.0" PrivateAssets="All" />
+  </ItemGroup>
+  
+  <ItemGroup>
+    <None Include="PACKAGE_README.md" Pack="true" PackagePath="/" />
+    <None Include="CHANGELOG.md" Pack="true" PackagePath="/" />
+  </ItemGroup>
+
+</Project>
