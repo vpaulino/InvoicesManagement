@@ -29,7 +29,8 @@ public interface IAttachmentPersistenceManager
     Task<byte[]> GetAttachmentAsync(string storageReference);
     
     /// <summary>
-    /// Retrieve an attachment as a stream (memory efficient)
+    /// Retrieve an attachment as a stream (memory efficient).
+    /// The caller is responsible for disposing the returned stream.
     /// </summary>
     Task<Stream> GetAttachmentStreamAsync(string storageReference);
     
