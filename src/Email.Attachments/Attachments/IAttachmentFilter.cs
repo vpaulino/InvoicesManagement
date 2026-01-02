@@ -1,9 +1,12 @@
-using Google.Apis.Gmail.v1.Data;
+using ExtractLoadInvoices.Models;
 
 namespace ExtractLoadInvoices.Attachments;
 
+/// <summary>
+/// Attachment filter interface
+/// </summary>
 public interface IAttachmentFilter
 {
-    bool IsValidAttachment(MessagePart part);
-    IEnumerable<MessagePart> FilterAttachments(IEnumerable<MessagePart> parts);
+    bool IsValidAttachment(EmailMessagePart part);
+    IEnumerable<EmailMessagePart> FilterAttachments(IEnumerable<EmailMessagePart> parts);
 }

@@ -1,6 +1,8 @@
-﻿
-namespace ExtractLoadInvoices.UseCases
+﻿namespace ExtractLoadInvoices.UseCases
 {
+    /// <summary>
+    /// High-level email files manager interface - main public API for email attachment management
+    /// </summary>
     public interface IEmailFilesManager
     {
         Task<EmailFilesBatch> FetchEmailFilesByPeriodAsync(TimePeriod period, FetchOptions? options = null);
@@ -16,5 +18,6 @@ namespace ExtractLoadInvoices.UseCases
         Task<EmailFilesBatch> FetchThisWeekEmailFilesAsync(FetchOptions? options = null);
         Task<EmailFilesBatch> FetchThisYearEmailFilesAsync(FetchOptions? options = null);
         Task<IEnumerable<VendorInfo>> GetConfiguredVendorsAsync();
+      
     }
 }

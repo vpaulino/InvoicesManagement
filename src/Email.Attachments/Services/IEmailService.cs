@@ -1,12 +1,14 @@
-using Google.Apis.Gmail.v1.Data;
 using ExtractLoadInvoices.Models;
 
 namespace ExtractLoadInvoices.Services;
 
+/// <summary>
+/// Provider-agnostic email service interface
+/// </summary>
 public interface IEmailService
 {
-    Task<IEnumerable<Message>> GetEmailsAsync(EmailQuery query);
-    Task<Message> GetMessageDetailsAsync(string messageId);
-    Task<MessagePartBody> GetAttachmentAsync(string messageId, string attachmentId);
+    Task<IEnumerable<EmailMessage>> GetEmailsAsync(EmailQuery query);
+    Task<EmailMessageDetails> GetMessageDetailsAsync(string messageId);
+    Task<AttachmentData> GetAttachmentAsync(string messageId, string attachmentId);
     Task MarkAsReadAsync(string messageId);
 }

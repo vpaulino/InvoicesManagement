@@ -69,10 +69,13 @@ jobs:
     
     - name: Push to NuGet.org
       run: |
-        dotnet nuget push "${{ env.PACKAGE_OUTPUT_DIR }}/*.nupkg" \
-          --api-key ${{ secrets.NUGET_API_KEY }} \
-          --source ${{ env.NUGET_SOURCE }} \
-          --skip-duplicate
+        for package in ${{ env.PACKAGE_OUTPUT_DIR }}/*.nupkg; do
+          echo "Pushing $package"
+          dotnet nuget push "$package" \
+            --api-key ${{ secrets.NUGET_API_KEY }} \
+            --source ${{ env.NUGET_SOURCE }} \
+            --skip-duplicate
+        done
     
     - name: Create GitHub Release
       uses: softprops/action-gh-release@v1

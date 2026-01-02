@@ -1,32 +1,25 @@
 namespace ExtractLoadInvoices.FileSystem;
 
-public class FileStorageService : IFileStorageService
+/// <summary>
+/// File storage service implementation
+/// </summary>
+public class LocalFileStorageService : IFileStorageService
 {
-    private readonly string _baseDirectory;
-
-    public FileStorageService()
+    public virtual void EnsureDirectoryExists(string path)
     {
-        _baseDirectory = Environment.CurrentDirectory;
-    }
-
-    public void EnsureDirectoryExists(string path)
-    {
-        var fullPath = Path.Combine(_baseDirectory, path);
-        
-        if (!Directory.Exists(fullPath))
+        if (!Directory.Exists(path))
         {
-            Directory.CreateDirectory(fullPath);
+            Directory.CreateDirectory(path);
         }
     }
 
-    public void SaveFile(string filePath, byte[] data)
+    public virtual void SaveFile(string filePath, byte[] data)
     {
         File.WriteAllBytes(filePath, data);
     }
 
-    public string GetFullPath(string directory, string fileName)
+    public virtual string GetFullPath(string directory, string fileName)
     {
-        var fullDirectory = Path.Combine(_baseDirectory, directory);
-        return Path.Combine(fullDirectory, fileName);
+        return Path.Combine(directory, fileName);
     }
 }

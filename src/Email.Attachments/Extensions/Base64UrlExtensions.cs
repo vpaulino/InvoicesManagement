@@ -1,6 +1,9 @@
 namespace ExtractLoadInvoices.Extensions;
 
-public static class Base64UrlExtensions
+/// <summary>
+/// Base64 URL encoding extensions (internal utility)
+/// </summary>
+internal static class Base64UrlExtensions
 {
     public static byte[] DecodeBase64Url(this string base64UrlString)
     {

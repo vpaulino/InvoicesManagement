@@ -17,8 +17,8 @@ builder.Configuration.Sources.Clear();
 builder.Configuration.AddJsonFile(Path.Combine(Environment.CurrentDirectory, "app.json"), optional: false, reloadOnChange: true);
 builder.Configuration.AddEnvironmentVariables();
 
-// Register all invoice downloader services
-builder.Services.AddInvoiceDownloader(builder.Configuration);
+// Register all Gmail invoice downloader services
+builder.Services.AddGmailFilesDownloader(builder.Configuration);
 
 // Configure logging
 builder.Logging.ClearProviders();

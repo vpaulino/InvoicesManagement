@@ -9,7 +9,7 @@ using System.Diagnostics;
 namespace ExtractLoadInvoices.UseCases;
 
 /// <summary>
-/// High-level invoice manager with use-case oriented API
+/// High-level email files manager with use-case oriented API
 /// </summary>
 public class EmailFilesManager : IEmailFilesManager
 {
@@ -149,8 +149,8 @@ public class EmailFilesManager : IEmailFilesManager
     {
         var invoices = new List<EmailAttachment>();
 
-        // Build email query
-        var query = new EmailQuery
+        // Build email query - using GmailEmailQuery for Gmail provider
+        var query = new GmailEmailQuery
         {
             SenderEmail = vendorEmail,
             UnreadOnly = options.UnreadOnly
@@ -200,19 +200,15 @@ public class EmailFilesManager : IEmailFilesManager
         {
             MessageId = messageId,
             Sender = vendorEmail,
-            SenderName = ExtractSenderName(message),
+            SenderName = message.From?.Name ?? message.From?.Address ?? vendorEmail,
             VendorName = vendorEmail.Split('@')[0]
         };
 
         // Extract metadata
-        if (options.IncludeMetadata && message.Payload?.Headers != null)
+        if (options.IncludeMetadata)
         {
-            invoice.Subject = GetHeaderValue(message.Payload.Headers, "Subject") ?? "";
-            var dateStr = GetHeaderValue(message.Payload.Headers, "Date");
-            if (DateTime.TryParse(dateStr, out var sentDate))
-            {
-                invoice.SentDate = sentDate;
-            }
+            invoice.Subject = message.Subject;
+            invoice.SentDate = message.Date;
         }
 
         // Extract email body
@@ -261,7 +257,7 @@ public class EmailFilesManager : IEmailFilesManager
 
     private async Task<FileAttachment?> ProcessAttachmentAsync(
         string messageId,
-        Google.Apis.Gmail.v1.Data.MessagePart part,
+        EmailMessagePart part,
         string vendorEmail,
         DateTime emailDate,
         FetchOptions options)
@@ -346,24 +342,7 @@ public class EmailFilesManager : IEmailFilesManager
         };
     }
 
-    private string ExtractSenderName(Google.Apis.Gmail.v1.Data.Message message)
-    {
-        var from = GetHeaderValue(message.Payload?.Headers, "From");
-        if (string.IsNullOrEmpty(from))
-            return "";
-
-        // Extract name from "Name <email@domain.com>"
-        var match = System.Text.RegularExpressions.Regex.Match(from, @"^(.+?)\s*<");
-        return match.Success ? match.Groups[1].Value.Trim() : from;
-    }
-
-    private string? GetHeaderValue(IList<Google.Apis.Gmail.v1.Data.MessagePartHeader>? headers, string name)
-    {
-        return headers?.FirstOrDefault(h =>
-            h.Name?.Equals(name, StringComparison.OrdinalIgnoreCase) == true)?.Value;
-    }
-
-    private string? ExtractEmailBody(Google.Apis.Gmail.v1.Data.MessagePart payload)
+    private string? ExtractEmailBody(EmailMessagePart payload)
     {
         // Try to get HTML body
         if (!string.IsNullOrEmpty(payload.Body?.Data))
@@ -386,7 +365,7 @@ public class EmailFilesManager : IEmailFilesManager
         return null;
     }
 
-    private string? ExtractPlainTextBody(Google.Apis.Gmail.v1.Data.MessagePart payload)
+    private string? ExtractPlainTextBody(EmailMessagePart payload)
     {
         if (!string.IsNullOrEmpty(payload.Body?.Data))
         {

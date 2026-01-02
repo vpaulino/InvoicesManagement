@@ -5,9 +5,10 @@ using Microsoft.Extensions.Options;
 namespace ExtractLoadInvoices.Storage;
 
 /// <summary>
-/// FileSystem-based attachment persistence using email-to-folder mappings
+/// FileSystem-based attachment persistence using email-to-folder mappings.
+/// This is the default implementation. For custom storage, implement IAttachmentPersistenceManager.
 /// </summary>
-public class FileSystemAttachmentPersistenceManager : IAttachmentPersistenceManager
+public sealed class FileSystemAttachmentPersistenceManager : IAttachmentPersistenceManager
 {
     private readonly string _baseDirectory;
     private readonly EmailMappingSettings _emailMappings;

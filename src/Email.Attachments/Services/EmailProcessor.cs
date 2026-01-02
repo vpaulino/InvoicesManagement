@@ -5,29 +5,32 @@ using Microsoft.Extensions.Logging;
 
 namespace ExtractLoadInvoices.Services;
 
+/// <summary>
+/// Email processor implementation
+/// </summary>
 public class EmailProcessor : IEmailProcessor
 {
-    private readonly IEmailService _gmailService;
+    private readonly IEmailService _emailService;
     private readonly IAttachmentFilter _attachmentFilter;
     private readonly IAttachmentDownloader _attachmentDownloader;
     private readonly IFileStorageService _fileStorage;
     private readonly ILogger<EmailProcessor> _logger;
 
     public EmailProcessor(
-        IEmailService gmailService,
+        IEmailService emailService,
         IAttachmentFilter attachmentFilter,
         IAttachmentDownloader attachmentDownloader,
         IFileStorageService fileStorage,
         ILogger<EmailProcessor> logger)
     {
-        _gmailService = gmailService;
+        _emailService = emailService;
         _attachmentFilter = attachmentFilter;
         _attachmentDownloader = attachmentDownloader;
         _fileStorage = fileStorage;
         _logger = logger;
     }
 
-    public async Task<ProcessingResult> ProcessEmailsFromSenderAsync(string senderEmail, string destinationFolder)
+    public virtual async Task<ProcessingResult> ProcessEmailsFromSenderAsync(string senderEmail, string destinationFolder, bool unreadOnly = true)
     {
         var result = new ProcessingResult();
 
@@ -35,14 +38,14 @@ public class EmailProcessor : IEmailProcessor
         {
             _logger.LogInformation("Processing emails from {SenderEmail}", senderEmail);
 
-            var query = new EmailQuery
+            var query = new GmailEmailQuery
             {
                 SenderEmail = senderEmail,
-                UnreadOnly = true,
+                UnreadOnly = unreadOnly,
                 IncludeSpamTrash = false,
             };
 
-            var messages = await _gmailService.GetEmailsAsync(query);
+            var messages = await _emailService.GetEmailsAsync(query);
 
             foreach (var message in messages)
             {
@@ -71,11 +74,11 @@ public class EmailProcessor : IEmailProcessor
         return result;
     }
 
-    private async Task ProcessSingleEmailAsync(string messageId, string destinationFolder, ProcessingResult result)
+    protected virtual async Task ProcessSingleEmailAsync(string messageId, string destinationFolder, ProcessingResult result)
     {
-        var message = await _gmailService.GetMessageDetailsAsync(messageId);
+        var message = await _emailService.GetMessageDetailsAsync(messageId);
 
-        if (message.Payload?.Parts == null)
+        if (message.Payload?.Parts == null || !message.Payload.Parts.Any())
         {
             _logger.LogDebug("Email {MessageId} has no parts", messageId);
             await MarkEmailAsReadAsync(messageId);
@@ -102,8 +105,14 @@ public class EmailProcessor : IEmailProcessor
         await MarkEmailAsReadAsync(messageId);
     }
 
-    private async Task DownloadAndSaveAttachmentAsync(string messageId, Google.Apis.Gmail.v1.Data.MessagePart part, string destinationFolder)
+    protected virtual async Task DownloadAndSaveAttachmentAsync(string messageId, EmailMessagePart part, string destinationFolder)
     {
+        if (part.Body == null || string.IsNullOrEmpty(part.Body.AttachmentId))
+        {
+            _logger.LogWarning("Part {PartId} has no attachment body", part.PartId);
+            return;
+        }
+
         var attachment = await _attachmentDownloader.DownloadAttachmentAsync(
             messageId, 
             part.Body.AttachmentId, 
@@ -119,11 +128,11 @@ public class EmailProcessor : IEmailProcessor
         _logger.LogInformation("Saved attachment: {FilePath}", filePath);
     }
 
-    private async Task MarkEmailAsReadAsync(string messageId)
+    protected virtual async Task MarkEmailAsReadAsync(string messageId)
     {
         try
         {
-            await _gmailService.MarkAsReadAsync(messageId);
+            await _emailService.MarkAsReadAsync(messageId);
         }
         catch (Exception ex)
         {
