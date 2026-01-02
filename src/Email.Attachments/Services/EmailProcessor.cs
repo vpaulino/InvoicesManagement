@@ -5,6 +5,9 @@ using Microsoft.Extensions.Logging;
 
 namespace ExtractLoadInvoices.Services;
 
+/// <summary>
+/// Email processor implementation
+/// </summary>
 public class EmailProcessor : IEmailProcessor
 {
     private readonly IEmailService _emailService;
@@ -27,7 +30,7 @@ public class EmailProcessor : IEmailProcessor
         _logger = logger;
     }
 
-    public async Task<ProcessingResult> ProcessEmailsFromSenderAsync(string senderEmail, string destinationFolder)
+    public virtual async Task<ProcessingResult> ProcessEmailsFromSenderAsync(string senderEmail, string destinationFolder, bool unreadOnly = true)
     {
         var result = new ProcessingResult();
 
@@ -38,7 +41,7 @@ public class EmailProcessor : IEmailProcessor
             var query = new GmailEmailQuery
             {
                 SenderEmail = senderEmail,
-                UnreadOnly = true,
+                UnreadOnly = unreadOnly,
                 IncludeSpamTrash = false,
             };
 
@@ -71,7 +74,7 @@ public class EmailProcessor : IEmailProcessor
         return result;
     }
 
-    private async Task ProcessSingleEmailAsync(string messageId, string destinationFolder, ProcessingResult result)
+    protected virtual async Task ProcessSingleEmailAsync(string messageId, string destinationFolder, ProcessingResult result)
     {
         var message = await _emailService.GetMessageDetailsAsync(messageId);
 
@@ -102,7 +105,7 @@ public class EmailProcessor : IEmailProcessor
         await MarkEmailAsReadAsync(messageId);
     }
 
-    private async Task DownloadAndSaveAttachmentAsync(string messageId, EmailMessagePart part, string destinationFolder)
+    protected virtual async Task DownloadAndSaveAttachmentAsync(string messageId, EmailMessagePart part, string destinationFolder)
     {
         if (part.Body == null || string.IsNullOrEmpty(part.Body.AttachmentId))
         {
@@ -125,7 +128,7 @@ public class EmailProcessor : IEmailProcessor
         _logger.LogInformation("Saved attachment: {FilePath}", filePath);
     }
 
-    private async Task MarkEmailAsReadAsync(string messageId)
+    protected virtual async Task MarkEmailAsReadAsync(string messageId)
     {
         try
         {

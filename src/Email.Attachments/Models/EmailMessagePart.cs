@@ -1,9 +1,9 @@
 namespace ExtractLoadInvoices.Models;
 
 /// <summary>
-/// Provider-agnostic representation of an email message part
+/// Provider-agnostic representation of an email message part (internal - used by service layer)
 /// </summary>
-public class EmailMessagePart
+public  sealed class EmailMessagePart
 {
     public string PartId { get; set; } = string.Empty;
     public string MimeType { get; set; } = string.Empty;
@@ -14,9 +14,9 @@ public class EmailMessagePart
 }
 
 /// <summary>
-/// Provider-agnostic representation of message part body
+/// Provider-agnostic representation of message part body (internal - used by service layer)
 /// </summary>
-public class EmailMessagePartBody
+public  sealed class EmailMessagePartBody
 {
     public string AttachmentId { get; set; } = string.Empty;
     public int Size { get; set; }

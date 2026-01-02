@@ -3,9 +3,12 @@ using Google.Apis.Util.Store;
 
 namespace ExtractLoadInvoices.Authentication;
 
+/// <summary>
+/// Google authenticator implementation
+/// </summary>
 public class GoogleAuthenticator : IGoogleAuthenticator
 {
-    public async Task<UserCredential> AuthenticateAsync(string credentialsPath, string tokenPath, string[] scopes)
+    public virtual async Task<UserCredential> AuthenticateAsync(string credentialsPath, string tokenPath, string[] scopes)
     {
         if (!File.Exists(credentialsPath))
             throw new FileNotFoundException($"Credentials file not found: {credentialsPath}");

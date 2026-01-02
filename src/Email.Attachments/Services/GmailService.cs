@@ -18,7 +18,7 @@ public class GmailService : IEmailService
         _gmailApiService = gmailApiService;
     }
 
-    public async Task<IEnumerable<EmailMessage>> GetEmailsAsync(EmailQuery query)
+    public virtual async Task<IEnumerable<EmailMessage>> GetEmailsAsync(EmailQuery query)
     {
         var gmailQuery = query as GmailEmailQuery 
             ?? throw new ArgumentException("Query must be of type GmailEmailQuery for Gmail provider", nameof(query));
@@ -33,7 +33,7 @@ public class GmailService : IEmailService
         return response?.Messages?.Select(MapToEmailMessage) ?? Enumerable.Empty<EmailMessage>();
     }
 
-    public async Task<EmailMessageDetails> GetMessageDetailsAsync(string messageId)
+    public virtual async Task<EmailMessageDetails> GetMessageDetailsAsync(string messageId)
     {
         var getRequest = _gmailApiService.Users.Messages.Get(UserId, messageId);
         var gmailMessage = await getRequest.ExecuteAsync();
@@ -41,7 +41,7 @@ public class GmailService : IEmailService
         return MapToEmailMessageDetails(gmailMessage);
     }
 
-    public async Task<AttachmentData> GetAttachmentAsync(string messageId, string attachmentId)
+    public virtual async Task<AttachmentData> GetAttachmentAsync(string messageId, string attachmentId)
     {
         var attachmentRequest = _gmailApiService.Users.Messages.Attachments.Get(UserId, messageId, attachmentId);
         var gmailAttachment = await attachmentRequest.ExecuteAsync();
@@ -49,7 +49,7 @@ public class GmailService : IEmailService
         return MapToAttachmentData(gmailAttachment);
     }
 
-    public async Task MarkAsReadAsync(string messageId)
+    public virtual async Task MarkAsReadAsync(string messageId)
     {
         var modifyRequest = new ModifyMessageRequest
         {

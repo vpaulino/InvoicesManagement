@@ -1,17 +1,18 @@
 namespace ExtractLoadInvoices.Models;
 
 /// <summary>
-/// Gmail-specific email query with Gmail search operators
+/// Gmail-specific email query with Gmail search operators.
+/// Public for users to create Gmail queries.
 /// </summary>
-public class GmailEmailQuery : EmailQuery
+public sealed class GmailEmailQuery : EmailQuery
 {
     public bool IncludeSpamTrash { get; set; } = false;
     public string LabelId { get; set; } = "INBOX";
 
     /// <summary>
-    /// Builds Gmail-specific search query string
+    /// Builds Gmail-specific search query string (internal use)
     /// </summary>
-    public string BuildGmailQueryString()
+    internal string BuildGmailQueryString()
     {
         var queryParts = new List<string>();
         

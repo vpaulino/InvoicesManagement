@@ -1,5 +1,8 @@
 namespace ExtractLoadInvoices.FileSystem;
 
+/// <summary>
+/// File storage service interface
+/// </summary>
 public interface IFileStorageService
 {
     void EnsureDirectoryExists(string path);

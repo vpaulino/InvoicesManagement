@@ -6,7 +6,8 @@ namespace ExtractLoadInvoices.Models;
 public abstract class EmailQuery
 {
     public string SenderEmail { get; set; } = string.Empty;
-    public bool UnreadOnly { get; set; } = true;
+
+    public bool UnreadOnly { get; set; } = false;
     
     /// <summary>
     /// Filter emails received after this date (inclusive)

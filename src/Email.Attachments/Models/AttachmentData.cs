@@ -1,9 +1,9 @@
 namespace ExtractLoadInvoices.Models;
 
 /// <summary>
-/// Provider-agnostic attachment data
+/// Provider-agnostic attachment data (internal - used by service layer)
 /// </summary>
-public class AttachmentData
+public  sealed class AttachmentData
 {
     public string AttachmentId { get; set; } = string.Empty;
     public int Size { get; set; }

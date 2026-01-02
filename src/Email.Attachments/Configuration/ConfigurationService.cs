@@ -2,6 +2,9 @@ using Microsoft.Extensions.Configuration;
 
 namespace ExtractLoadInvoices.Configuration;
 
+/// <summary>
+/// Configuration service implementation
+/// </summary>
 public class ConfigurationService : IConfigurationService
 {
     private readonly IConfiguration _configuration;
@@ -11,7 +14,7 @@ public class ConfigurationService : IConfigurationService
         _configuration = configuration;
     }
 
-    public AppSettings LoadConfiguration()
+    public virtual AppSettings LoadConfiguration()
     {
         var settings = new AppSettings
         {
@@ -41,7 +44,7 @@ public class ConfigurationService : IConfigurationService
         return settings;
     }
 
-    public void ValidateConfiguration(AppSettings settings)
+    public virtual void ValidateConfiguration(AppSettings settings)
     {
         if (string.IsNullOrWhiteSpace(settings.ApplicationName))
             throw new InvalidOperationException("Application name is required.");

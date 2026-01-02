@@ -1,9 +1,9 @@
 namespace ExtractLoadInvoices.Models;
 
 /// <summary>
-/// Provider-agnostic representation of an email message
+/// Provider-agnostic representation of an email message (internal - used by service layer)
 /// </summary>
-public class EmailMessage
+public  sealed class EmailMessage
 {
     public string Id { get; set; } = string.Empty;
     public string ThreadId { get; set; } = string.Empty;

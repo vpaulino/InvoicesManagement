@@ -9,7 +9,7 @@ using System.Diagnostics;
 namespace ExtractLoadInvoices.UseCases;
 
 /// <summary>
-/// High-level invoice manager with use-case oriented API
+/// High-level email files manager with use-case oriented API
 /// </summary>
 public class EmailFilesManager : IEmailFilesManager
 {

@@ -4,6 +4,9 @@ using ExtractLoadInvoices.Services;
 
 namespace ExtractLoadInvoices.Attachments;
 
+/// <summary>
+/// Attachment downloader implementation
+/// </summary>
 public class AttachmentDownloader : IAttachmentDownloader
 {
     private readonly IEmailService _emailService;
@@ -13,7 +16,7 @@ public class AttachmentDownloader : IAttachmentDownloader
         _emailService = emailService;
     }
 
-    public async Task<EmailAttachment> DownloadAttachmentAsync(string messageId, string attachmentId, string filename, string mimeType)
+    public virtual async Task<EmailAttachment> DownloadAttachmentAsync(string messageId, string attachmentId, string filename, string mimeType)
     {
         var attachmentData = await _emailService.GetAttachmentAsync(messageId, attachmentId);
         

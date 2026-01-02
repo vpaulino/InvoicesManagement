@@ -1,6 +1,9 @@
 namespace ExtractLoadInvoices.Configuration;
 
-public class AppSettings
+/// <summary>
+/// Application settings (public for configuration binding)
+/// </summary>
+public sealed class AppSettings
 {
     public string ApplicationName { get; set; } = string.Empty;
     public GoogleCredentialsSettings GoogleCredentials { get; set; } = new();

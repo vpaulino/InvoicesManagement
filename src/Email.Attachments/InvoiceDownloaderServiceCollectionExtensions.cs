@@ -73,7 +73,7 @@ public static class InvoiceDownloaderServiceCollectionExtensions
         services.AddSingleton<IGoogleAuthenticator, GoogleAuthenticator>();
         services.AddSingleton<IAttachmentFilter, AttachmentFilter>();
         services.AddSingleton<IAttachmentDownloader, AttachmentDownloader>();
-        services.AddSingleton<IFileStorageService, FileStorageService>();
+        services.AddSingleton<IFileStorageService, LocalFileStorageService>();
         services.AddSingleton<IEmailService, Services.GmailService>();
         services.AddSingleton<IEmailProcessor, EmailProcessor>();
         
