@@ -5,24 +5,24 @@ using ExtractLoadInvoices.FileSystem;
 using ExtractLoadInvoices.Services;
 using ExtractLoadInvoices.Storage;
 using ExtractLoadInvoices.UseCases;
-using Google.Apis.Gmail.v1;
 using Google.Apis.Services;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using GmailApi = Google.Apis.Gmail.v1;
 
 namespace ExtractLoadInvoices;
 
 /// <summary>
-/// Extension methods for registering invoice downloader services
+/// Extension methods for registering Gmail email files downloader services
 /// </summary>
 public static class InvoiceDownloaderServiceCollectionExtensions
 {
     /// <summary>
-    /// Registers all invoice downloader services into the dependency injection container
+    /// Registers all Gmail email files downloader services into the dependency injection container
     /// </summary>
-    public static IServiceCollection AddEmailFilesDownloader(
+    public static IServiceCollection AddGmailFilesDownloader(
         this IServiceCollection services, 
         IConfiguration configuration)
     {
@@ -74,7 +74,7 @@ public static class InvoiceDownloaderServiceCollectionExtensions
         services.AddSingleton<IAttachmentFilter, AttachmentFilter>();
         services.AddSingleton<IAttachmentDownloader, AttachmentDownloader>();
         services.AddSingleton<IFileStorageService, FileStorageService>();
-        services.AddSingleton<IEmailService, GmailServiceWrapper>();
+        services.AddSingleton<IEmailService, Services.GmailService>();
         services.AddSingleton<IEmailProcessor, EmailProcessor>();
         
         // Register storage manager based on configuration
@@ -95,10 +95,10 @@ public static class InvoiceDownloaderServiceCollectionExtensions
             };
         });
         
-        // Register high-level Invoice Manager
+        // Register high-level Email Files Manager
         services.AddSingleton<IEmailFilesManager, EmailFilesManager>();
 
-        // Register Gmail service
+        // Register Gmail API service
         services.AddSingleton(serviceProvider =>
         {
             var configService = serviceProvider.GetRequiredService<IConfigurationService>();
@@ -106,9 +106,9 @@ public static class InvoiceDownloaderServiceCollectionExtensions
             var authenticator = serviceProvider.GetRequiredService<IGoogleAuthenticator>();
 
             string[] scopes = { 
-                GmailService.Scope.GmailReadonly, 
-                GmailService.Scope.GmailLabels, 
-                GmailService.Scope.GmailModify 
+                GmailApi.GmailService.Scope.GmailReadonly, 
+                GmailApi.GmailService.Scope.GmailLabels, 
+                GmailApi.GmailService.Scope.GmailModify 
             };
 
             var credential = authenticator.AuthenticateAsync(
@@ -116,7 +116,7 @@ public static class InvoiceDownloaderServiceCollectionExtensions
                 settings.GoogleCredentials.TokenDestination,
                 scopes).GetAwaiter().GetResult();
 
-            return new GmailService(new BaseClientService.Initializer
+            return new GmailApi.GmailService(new BaseClientService.Initializer
             {
                 HttpClientInitializer = credential,
                 ApplicationName = settings.ApplicationName

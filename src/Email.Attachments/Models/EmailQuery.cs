@@ -1,11 +1,12 @@
 namespace ExtractLoadInvoices.Models;
 
-public class EmailQuery
+/// <summary>
+/// Base class for provider-agnostic email query parameters
+/// </summary>
+public abstract class EmailQuery
 {
     public string SenderEmail { get; set; } = string.Empty;
     public bool UnreadOnly { get; set; } = true;
-    public bool IncludeSpamTrash { get; set; } = false;
-    public string LabelId { get; set; } = "INBOX";
     
     /// <summary>
     /// Filter emails received after this date (inclusive)
@@ -36,56 +37,4 @@ public class EmailQuery
     /// Example: NewerThan = 2 means emails from last 2 days
     /// </summary>
     public int? NewerThan { get; set; }
-
-    public string BuildQueryString()
-    {
-        var queryParts = new List<string>();
-        
-        // Sender filter
-        if (!string.IsNullOrWhiteSpace(SenderEmail))
-        {
-            queryParts.Add($"from:{SenderEmail}");
-        }
-        
-        // Unread filter
-        if (UnreadOnly)
-        {
-            queryParts.Add("in:unread");
-        }
-        
-        // Date filters - Gmail format is yyyy/MM/dd
-        if (On.HasValue)
-        {
-            // Search for emails on a specific date
-            queryParts.Add($"after:{On.Value:yyyy/MM/dd}");
-            queryParts.Add($"before:{On.Value.AddDays(1):yyyy/MM/dd}");
-        }
-        else
-        {
-            // After date filter
-            if (After.HasValue)
-            {
-                queryParts.Add($"after:{After.Value:yyyy/MM/dd}");
-            }
-            
-            // Before date filter
-            if (Before.HasValue)
-            {
-                queryParts.Add($"before:{Before.Value:yyyy/MM/dd}");
-            }
-        }
-        
-        // Relative date filters (take precedence if set)
-        if (OlderThan.HasValue)
-        {
-            queryParts.Add($"older_than:{OlderThan.Value}d");
-        }
-        
-        if (NewerThan.HasValue)
-        {
-            queryParts.Add($"newer_than:{NewerThan.Value}d");
-        }
-        
-        return string.Join(" ", queryParts);
-    }
 }

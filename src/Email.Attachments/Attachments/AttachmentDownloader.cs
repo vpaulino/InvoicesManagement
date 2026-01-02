@@ -6,18 +6,18 @@ namespace ExtractLoadInvoices.Attachments;
 
 public class AttachmentDownloader : IAttachmentDownloader
 {
-    private readonly IEmailService _gmailService;
+    private readonly IEmailService _emailService;
 
-    public AttachmentDownloader(IEmailService gmailService)
+    public AttachmentDownloader(IEmailService emailService)
     {
-        _gmailService = gmailService;
+        _emailService = emailService;
     }
 
     public async Task<EmailAttachment> DownloadAttachmentAsync(string messageId, string attachmentId, string filename, string mimeType)
     {
-        var attachmentBody = await _gmailService.GetAttachmentAsync(messageId, attachmentId);
+        var attachmentData = await _emailService.GetAttachmentAsync(messageId, attachmentId);
         
-        var data = attachmentBody.Data.DecodeBase64Url();
+        var data = attachmentData.Data.DecodeBase64Url();
 
         return new EmailAttachment
         {

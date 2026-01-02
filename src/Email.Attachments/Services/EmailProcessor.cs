@@ -7,20 +7,20 @@ namespace ExtractLoadInvoices.Services;
 
 public class EmailProcessor : IEmailProcessor
 {
-    private readonly IEmailService _gmailService;
+    private readonly IEmailService _emailService;
     private readonly IAttachmentFilter _attachmentFilter;
     private readonly IAttachmentDownloader _attachmentDownloader;
     private readonly IFileStorageService _fileStorage;
     private readonly ILogger<EmailProcessor> _logger;
 
     public EmailProcessor(
-        IEmailService gmailService,
+        IEmailService emailService,
         IAttachmentFilter attachmentFilter,
         IAttachmentDownloader attachmentDownloader,
         IFileStorageService fileStorage,
         ILogger<EmailProcessor> logger)
     {
-        _gmailService = gmailService;
+        _emailService = emailService;
         _attachmentFilter = attachmentFilter;
         _attachmentDownloader = attachmentDownloader;
         _fileStorage = fileStorage;
@@ -35,14 +35,14 @@ public class EmailProcessor : IEmailProcessor
         {
             _logger.LogInformation("Processing emails from {SenderEmail}", senderEmail);
 
-            var query = new EmailQuery
+            var query = new GmailEmailQuery
             {
                 SenderEmail = senderEmail,
                 UnreadOnly = true,
                 IncludeSpamTrash = false,
             };
 
-            var messages = await _gmailService.GetEmailsAsync(query);
+            var messages = await _emailService.GetEmailsAsync(query);
 
             foreach (var message in messages)
             {
@@ -73,9 +73,9 @@ public class EmailProcessor : IEmailProcessor
 
     private async Task ProcessSingleEmailAsync(string messageId, string destinationFolder, ProcessingResult result)
     {
-        var message = await _gmailService.GetMessageDetailsAsync(messageId);
+        var message = await _emailService.GetMessageDetailsAsync(messageId);
 
-        if (message.Payload?.Parts == null)
+        if (message.Payload?.Parts == null || !message.Payload.Parts.Any())
         {
             _logger.LogDebug("Email {MessageId} has no parts", messageId);
             await MarkEmailAsReadAsync(messageId);
@@ -102,8 +102,14 @@ public class EmailProcessor : IEmailProcessor
         await MarkEmailAsReadAsync(messageId);
     }
 
-    private async Task DownloadAndSaveAttachmentAsync(string messageId, Google.Apis.Gmail.v1.Data.MessagePart part, string destinationFolder)
+    private async Task DownloadAndSaveAttachmentAsync(string messageId, EmailMessagePart part, string destinationFolder)
     {
+        if (part.Body == null || string.IsNullOrEmpty(part.Body.AttachmentId))
+        {
+            _logger.LogWarning("Part {PartId} has no attachment body", part.PartId);
+            return;
+        }
+
         var attachment = await _attachmentDownloader.DownloadAttachmentAsync(
             messageId, 
             part.Body.AttachmentId, 
@@ -123,7 +129,7 @@ public class EmailProcessor : IEmailProcessor
     {
         try
         {
-            await _gmailService.MarkAsReadAsync(messageId);
+            await _emailService.MarkAsReadAsync(messageId);
         }
         catch (Exception ex)
         {

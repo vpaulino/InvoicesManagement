@@ -7,17 +7,79 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.0.0] - TBD
+
+### ?? Breaking Changes
+- **Service Registration:** Renamed `AddEmailFilesDownloader()` to `AddGmailFilesDownloader()` to explicitly indicate Gmail provider
+- **Models:** Introduced provider-agnostic email models (`EmailMessage`, `EmailMessageDetails`, `AttachmentData`, `EmailMessagePart`)
+- **IEmailService:** Updated to return provider-agnostic models instead of Gmail-specific types
+- **EmailQuery:** Converted to abstract base class; use `GmailEmailQuery` for Gmail-specific queries
+- **Service Names:** Renamed `GmailServiceWrapper` to `GmailService` for cleaner naming
+
+### ? Added
+- Multi-provider architecture with provider-agnostic core interfaces
+- `EmailMessage` - Provider-agnostic message representation
+- `EmailMessageDetails` - Detailed message with parsed headers
+- `EmailMessagePart` - Message part/body representation
+- `AttachmentData` - Provider-agnostic attachment data
+- `EmailAddress` - Email address model
+- `GmailEmailQuery` - Gmail-specific query implementation
+- Automatic mapping between Gmail API models and provider-agnostic models
+
+### ?? Changed
+- `IEmailService` now returns provider-agnostic types
+- `IAttachmentFilter` works with `EmailMessagePart` instead of Gmail `MessagePart`
+- `GmailService` includes mapping logic from Gmail API to domain models
+- Service registration explicitly requires Gmail configuration
+
+### ?? Migration Guide (v1.x ? v2.0)
+
+#### Service Registration
+```csharp
+// v1.x
+builder.Services.AddEmailFilesDownloader(configuration);
+
+// v2.0
+builder.Services.AddGmailFilesDownloader(configuration);
+```
+
+#### High-Level API (No Changes Required!)
+```csharp
+// Still works exactly the same
+var manager = services.GetRequiredService<IEmailFilesManager>();
+var batch = await manager.FetchLastMonthEmailFilesAsync();
+```
+
+#### Direct IEmailService Usage (Breaking)
+```csharp
+// v1.x
+var messages = await emailService.GetEmailsAsync(query);
+// messages was IEnumerable<Google.Apis.Gmail.v1.Data.Message>
+
+// v2.0
+var gmailQuery = new GmailEmailQuery { SenderEmail = "..." };
+var messages = await emailService.GetEmailsAsync(gmailQuery);
+// messages is now IEnumerable<EmailMessage>
+```
+
+### ?? Benefits of v2.0
+- ? Prepared for multiple email providers (Outlook, IMAP, etc.)
+- ? Cleaner separation of concerns
+- ? High-level APIs remain provider-agnostic
+- ? Explicit provider selection at registration
+- ? No Gmail types leaked into business logic
+
 ## [1.0.0] - 2024-12-15
 
 ### Added
 - Initial release of Email.Attachments
-- High-level use-case oriented API via `IInvoiceManager`
-  - `FetchLastWeekInvoicesAsync()` - Download last week's attachments
-  - `FetchLastMonthInvoicesAsync()` - Download last month's attachments
-  - `FetchLastQuarterInvoicesAsync()` - Download last quarter's attachments
-  - `FetchLastYearInvoicesAsync()` - Download last year's attachments
-  - `FetchInvoicesByVendorAsync()` - Download from specific vendor
-  - `FetchInvoicesByPeriodAsync()` - Custom date range downloads
+- High-level use-case oriented API via `IEmailFilesManager`
+  - `FetchLastWeekEmailFilesAsync()` - Download last week's attachments
+  - `FetchLastMonthEmailFilesAsync()` - Download last month's attachments
+  - `FetchLastQuarterEmailFilesAsync()` - Download last quarter's attachments
+  - `FetchLastYearEmailFilesAsync()` - Download last year's attachments
+  - `FetchEmailFilesByVendorAsync()` - Download from specific vendor
+  - `FetchEmailFilesByPeriodAsync()` - Custom date range downloads
 - Pluggable storage architecture
   - `IAttachmentPersistenceManager` interface
   - `FileSystemAttachmentPersistenceManager` implementation
@@ -49,11 +111,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Memory-efficient streaming for large attachments
 - Base64url decoding for Gmail attachments
 - Email body extraction (HTML and plain text)
-- Comprehensive documentation
-  - API usage guide
-  - Architecture overview
-  - Date filtering guide
-  - Quick reference cards
 
 ### Dependencies
 - Google.Apis.Gmail.v1 (>= 1.55.0.2510)
@@ -75,7 +132,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 1. Update version in `Email.Attachments.csproj`
 2. Update this CHANGELOG with release notes
 3. Commit changes
-4. Create and push git tag: `git tag -a v1.0.0 -m "Release 1.0.0"`
+4. Create and push git tag: `git tag -a v2.0.0 -m "Release 2.0.0"`
 5. GitHub Actions will automatically publish to NuGet.org
 
 ### Version Numbering
@@ -87,5 +144,6 @@ We follow [Semantic Versioning](https://semver.org/):
 
 ---
 
-[Unreleased]: https://github.com/vpaulino/InvoicesManagement/compare/v1.0.0...HEAD
+[Unreleased]: https://github.com/vpaulino/InvoicesManagement/compare/v2.0.0...HEAD
+[2.0.0]: https://github.com/vpaulino/InvoicesManagement/compare/v1.0.0...v2.0.0
 [1.0.0]: https://github.com/vpaulino/InvoicesManagement/releases/tag/v1.0.0

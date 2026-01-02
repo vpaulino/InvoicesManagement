@@ -1,4 +1,4 @@
-using Google.Apis.Gmail.v1.Data;
+using ExtractLoadInvoices.Models;
 
 namespace ExtractLoadInvoices.Attachments;
 
@@ -10,13 +10,13 @@ public class AttachmentFilter : IAttachmentFilter
         "application/octet-stream"
     };
 
-    public bool IsValidAttachment(MessagePart part)
+    public bool IsValidAttachment(EmailMessagePart part)
     {
         return !string.IsNullOrEmpty(part.Filename) && 
                _validMimeTypes.Contains(part.MimeType);
     }
 
-    public IEnumerable<MessagePart> FilterAttachments(IEnumerable<MessagePart> parts)
+    public IEnumerable<EmailMessagePart> FilterAttachments(IEnumerable<EmailMessagePart> parts)
     {
         return parts.Where(IsValidAttachment);
     }

@@ -1,0 +1,24 @@
+namespace ExtractLoadInvoices.Models;
+
+/// <summary>
+/// Provider-agnostic representation of an email message part
+/// </summary>
+public class EmailMessagePart
+{
+    public string PartId { get; set; } = string.Empty;
+    public string MimeType { get; set; } = string.Empty;
+    public string Filename { get; set; } = string.Empty;
+    public Dictionary<string, string> Headers { get; set; } = new();
+    public EmailMessagePartBody? Body { get; set; }
+    public IEnumerable<EmailMessagePart> Parts { get; set; } = Enumerable.Empty<EmailMessagePart>();
+}
+
+/// <summary>
+/// Provider-agnostic representation of message part body
+/// </summary>
+public class EmailMessagePartBody
+{
+    public string AttachmentId { get; set; } = string.Empty;
+    public int Size { get; set; }
+    public string Data { get; set; } = string.Empty;
+}

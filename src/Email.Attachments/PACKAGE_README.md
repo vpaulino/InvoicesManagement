@@ -1,10 +1,12 @@
-﻿# Email.Attachments
+﻿# Email.Attachments (Gmail Provider)
 
 [![NuGet](https://img.shields.io/nuget/v/Email.Attachments.svg)](https://www.nuget.org/packages/Email.Attachments/)
 [![Downloads](https://img.shields.io/nuget/dt/Email.Attachments.svg)](https://www.nuget.org/packages/Email.Attachments/)
 [![License](https://img.shields.io/github/license/vpaulino/InvoicesManagement)](LICENSE)
 
 Comprehensive .NET library for automated email attachment extraction and management from Gmail accounts. Built with enterprise-grade architecture, featuring a high-level use-case oriented API, pluggable storage backends, and rich date filtering capabilities.
+
+**Multi-Provider Architecture** - v2.0 introduces provider-agnostic core with Gmail as the first supported provider. Future providers (Outlook, etc.) can be easily added.
 
 ## ✨ Features
 
@@ -56,17 +58,17 @@ Create `appsettings.json`:
 }
 ```
 
-### 2. Register Services
+### 2. Register Gmail Services
 
 ```csharp
-using Email.Attachments;
+using ExtractLoadInvoices;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
 var builder = Host.CreateApplicationBuilder(args);
 
-// Register all Email.Attachments services
-builder.Services.AddEmailFilesDownloader(builder.Configuration);
+// Register Gmail provider services
+builder.Services.AddGmailFilesDownloader(builder.Configuration);
 
 var host = builder.Build();
 ```
@@ -152,16 +154,28 @@ var batch = await manager.FetchEmailFilesByVendorAsync(
 ## 🏗️ Architecture
 
 ```
-IEmailFilesManager (High-Level API)
+IEmailFilesManager (High-Level API - Provider Agnostic)
     ├─► Time period methods (FetchLastWeekEmailFilesAsync, FetchLastMonthEmailFilesAsync, etc.)
     ├─► Vendor operations (FetchEmailFilesByVendorAsync, FetchEmailFilesByVendorsAsync)
     └─► Custom queries (FetchEmailFilesByPeriodAsync)
          ↓
-Uses existing services:
-    ├─► IGmailService (Email operations)
+Uses provider-agnostic services:
+    ├─► IEmailService (Gmail implementation: GmailService)
     ├─► IAttachmentPersistenceManager (Storage)
     └─► IAttachmentDownloader (Download & decode)
 ```
+
+## 📧 Email Provider Support
+
+### Gmail (Current)
+- ✅ Fully supported
+- ✅ OAuth 2.0 authentication
+- ✅ Advanced query syntax
+- ✅ Label/folder support
+
+### Future Providers
+- 🔜 Microsoft Outlook/Exchange (planned)
+- 🔜 Custom IMAP providers (planned)
 
 ## 📅 Time Period Helpers
 

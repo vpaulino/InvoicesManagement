@@ -7,26 +7,26 @@
     
     <!-- NuGet Package Metadata -->
     <PackageId>Email.Attachments</PackageId>
-    <Version>1.0.0</Version>
+    <Version>2.0.0</Version>
     <Authors>vpaulino</Authors>
     <Company>vpaulino</Company>
     <Product>Email.Attachments</Product>
-    <Description>Comprehensive email attachment extraction and management library for .NET. Extract, filter, and persist email attachments from Gmail with pluggable storage backends, rich date filtering, and use-case oriented API.</Description>
-    <PackageTags>email;gmail;attachments;extraction;automation;invoice;pdf;storage;oauth;api</PackageTags>
+    <Description>Multi-provider email attachment extraction and management library for .NET with Gmail support. Extract, filter, and persist email attachments with pluggable storage backends, rich date filtering, and use-case oriented API. Provider-agnostic architecture ready for Outlook, IMAP, and custom providers.</Description>
+    <PackageTags>email;gmail;attachments;extraction;automation;invoice;pdf;storage;oauth;api;multi-provider;outlook;imap</PackageTags>
     <PackageProjectUrl>https://github.com/vpaulino/InvoicesManagement</PackageProjectUrl>
     <RepositoryUrl>https://github.com/vpaulino/InvoicesManagement</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageReadmeFile>PACKAGE_README.md</PackageReadmeFile>
     <PackageReleaseNotes>
-      Version 1.0.0:
-      - Initial release
-      - Use-case oriented API for business-focused email attachment management
-      - Pluggable storage architecture (FileSystem, extensible for Azure Blob, AWS S3)
-      - Comprehensive date filtering and period abstractions
-      - Gmail OAuth 2.0 integration
-      - Full dependency injection support
-      - Memory-efficient streaming for large attachments
+      Version 2.0.0 (Breaking Changes):
+      - Multi-provider architecture with provider-agnostic core
+      - Renamed AddEmailFilesDownloader() to AddGmailFilesDownloader()
+      - Introduced provider-agnostic models (EmailMessage, EmailMessageDetails, etc.)
+      - GmailEmailQuery for Gmail-specific queries
+      - Cleaner service naming (GmailService instead of GmailServiceWrapper)
+      - High-level APIs remain unchanged and provider-agnostic
+      - Prepared for future Outlook/IMAP support
     </PackageReleaseNotes>
     
     <!-- Build Configuration -->
