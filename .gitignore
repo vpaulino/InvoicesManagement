@@ -348,8 +348,9 @@ MigrationBackup/
 
 # Ionide (cross platform F# VS Code tools) working folder
 .ionide/
-/EmailFilesDownloader/ExtractLoadInvoices/credentials.json
-/EmailFilesDownloader/ExtractLoadInvoices/Credentials.json
-/EmailFilesDownloader/ExtractLoadInvoices/app.development.json
-/EmailFilesDownloader/ConsolidateEmailInvoices/Credentials.json
-/EmailFilesDownloader/ConsolidateEmailInvoices/credentials.json
+/src/ExtractLoadInvoices/credentials.json
+/src/ExtractLoadInvoices/Credentials.json
+/src/ExtractLoadInvoices/app.development.json
+/src/ConsolidateEmailInvoices/Credentials.json
+/src/ConsolidateEmailInvoices/credentials.json
+/src/ConsolidateEmailInvoices/app.development.json

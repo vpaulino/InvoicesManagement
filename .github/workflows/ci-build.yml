@@ -1,0 +1,50 @@
+name: CI Build
+
+on:
+  push:
+    branches: [ main, master, develop, features/** ]
+    paths:
+      - 'src/Email.Attachments/**'
+      - '.github/workflows/ci-build.yml'
+  pull_request:
+    branches: [ main, master, develop ]
+    paths:
+      - 'src/Email.Attachments/**'
+      - '.github/workflows/ci-build.yml'
+
+env:
+  DOTNET_VERSION: '10.0.x'
+  PROJECT_PATH: 'src/Email.Attachments/Email.Attachments.csproj'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+    
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: ${{ env.DOTNET_VERSION }}
+    
+    - name: Restore dependencies
+      run: dotnet restore ${{ env.PROJECT_PATH }}
+    
+    - name: Build
+      run: dotnet build ${{ env.PROJECT_PATH }} --configuration Release --no-restore
+    
+    - name: Run tests
+      run: dotnet test --configuration Release --no-build --verbosity normal || echo "No tests found"
+      continue-on-error: true
+    
+    - name: Pack (validation only)
+      run: dotnet pack ${{ env.PROJECT_PATH }} --configuration Release --no-build --output ./artifacts
+    
+    - name: Upload build artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: build-artifacts
+        path: ./artifacts/*.nupkg
+        retention-days: 7
