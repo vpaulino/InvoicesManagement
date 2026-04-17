@@ -6,18 +6,21 @@ on:
     paths:
       - 'src/Email.Attachments/**'
       - 'src/Email.Attachments.McpServer/**'
+      - 'samples/**'
       - '.github/workflows/ci-build.yml'
   pull_request:
     branches: [ main, master, develop ]
     paths:
       - 'src/Email.Attachments/**'
       - 'src/Email.Attachments.McpServer/**'
+      - 'samples/**'
       - '.github/workflows/ci-build.yml'
 
 env:
   DOTNET_VERSION: '10.0.x'
   ATTACHMENTS_PROJECT: 'src/Email.Attachments/Email.Attachments.csproj'
   MCP_SERVER_PROJECT: 'src/Email.Attachments.McpServer/Email.Attachments.McpServer.csproj'
+  DEMO_PROJECT: 'samples/GmailMcpServer.Demo/GmailMcpServer.Demo.csproj'
 
 jobs:
   build:
@@ -37,12 +40,18 @@ jobs:
 
     - name: Restore — Email.Attachments.McpServer
       run: dotnet restore ${{ env.MCP_SERVER_PROJECT }}
+
+    - name: Restore — GmailMcpServer.Demo
+      run: dotnet restore ${{ env.DEMO_PROJECT }}
     
     - name: Build — Email.Attachments
       run: dotnet build ${{ env.ATTACHMENTS_PROJECT }} --configuration Release --no-restore
 
     - name: Build — Email.Attachments.McpServer
       run: dotnet build ${{ env.MCP_SERVER_PROJECT }} --configuration Release --no-restore
+
+    - name: Build — GmailMcpServer.Demo
+      run: dotnet build ${{ env.DEMO_PROJECT }} --configuration Release --no-restore
     
     - name: Run tests
       run: dotnet test --configuration Release --no-build --verbosity normal || echo "No tests found"
