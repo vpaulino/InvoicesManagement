@@ -5,16 +5,19 @@ on:
     branches: [ main, master, develop, features/** ]
     paths:
       - 'src/Email.Attachments/**'
+      - 'src/Email.Attachments.McpServer/**'
       - '.github/workflows/ci-build.yml'
   pull_request:
     branches: [ main, master, develop ]
     paths:
       - 'src/Email.Attachments/**'
+      - 'src/Email.Attachments.McpServer/**'
       - '.github/workflows/ci-build.yml'
 
 env:
   DOTNET_VERSION: '10.0.x'
-  PROJECT_PATH: 'src/Email.Attachments/Email.Attachments.csproj'
+  ATTACHMENTS_PROJECT: 'src/Email.Attachments/Email.Attachments.csproj'
+  MCP_SERVER_PROJECT: 'src/Email.Attachments.McpServer/Email.Attachments.McpServer.csproj'
 
 jobs:
   build:
@@ -29,18 +32,27 @@ jobs:
       with:
         dotnet-version: ${{ env.DOTNET_VERSION }}
     
-    - name: Restore dependencies
-      run: dotnet restore ${{ env.PROJECT_PATH }}
+    - name: Restore — Email.Attachments
+      run: dotnet restore ${{ env.ATTACHMENTS_PROJECT }}
+
+    - name: Restore — Email.Attachments.McpServer
+      run: dotnet restore ${{ env.MCP_SERVER_PROJECT }}
     
-    - name: Build
-      run: dotnet build ${{ env.PROJECT_PATH }} --configuration Release --no-restore
+    - name: Build — Email.Attachments
+      run: dotnet build ${{ env.ATTACHMENTS_PROJECT }} --configuration Release --no-restore
+
+    - name: Build — Email.Attachments.McpServer
+      run: dotnet build ${{ env.MCP_SERVER_PROJECT }} --configuration Release --no-restore
     
     - name: Run tests
       run: dotnet test --configuration Release --no-build --verbosity normal || echo "No tests found"
       continue-on-error: true
     
-    - name: Pack (validation only)
-      run: dotnet pack ${{ env.PROJECT_PATH }} --configuration Release --no-build --output ./artifacts
+    - name: Pack — Email.Attachments (validation only)
+      run: dotnet pack ${{ env.ATTACHMENTS_PROJECT }} --configuration Release --no-build --output ./artifacts
+
+    - name: Pack — Email.Attachments.McpServer (validation only)
+      run: dotnet pack ${{ env.MCP_SERVER_PROJECT }} --configuration Release --no-build --output ./artifacts
     
     - name: Upload build artifacts
       uses: actions/upload-artifact@v4

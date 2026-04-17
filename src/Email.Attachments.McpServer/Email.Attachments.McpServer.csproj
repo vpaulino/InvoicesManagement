@@ -1,0 +1,72 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+
+    <!-- NuGet Package Metadata -->
+    <PackageId>Email.Attachments.McpServer</PackageId>
+    <Version>1.0.0</Version>
+    <Authors>vpaulino</Authors>
+    <Company>vpaulino</Company>
+    <Product>Email.Attachments.McpServer</Product>
+    <Description>
+      ASP.NET 10 MCP (Model Context Protocol) server package that exposes Gmail
+      attachment management as AI-callable tools. Add to any ASP.NET web
+      application using the standard AddXxx / MapXxx pattern. Supports both
+      service-account credentials and per-user OAuth2 delegated access.
+      Powered by the Email.Attachments library and the official
+      ModelContextProtocol.AspNetCore SDK.
+    </Description>
+    <PackageTags>mcp;model-context-protocol;gmail;email;attachments;ai;aspnetcore;oauth;invoice</PackageTags>
+    <PackageProjectUrl>https://github.com/vpaulino/InvoicesManagement</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/vpaulino/InvoicesManagement</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageReadmeFile>PACKAGE_README.md</PackageReadmeFile>
+    <PackageReleaseNotes>
+      Version 1.0.0:
+      - Initial release
+      - MCP Streamable-HTTP transport via ModelContextProtocol.AspNetCore 1.2.0
+      - 7 Gmail tools: list_vendors, search_emails, fetch_attachments_last_week,
+        fetch_attachments_last_month, fetch_attachments_by_period,
+        fetch_attachments_by_vendor, get_storage_stats
+      - ServiceAccount and UserDelegated authentication modes
+    </PackageReleaseNotes>
+
+    <!-- Build configuration -->
+    <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
+    <EmbedUntrackedSources>true</EmbedUntrackedSources>
+    <IncludeSymbols>true</IncludeSymbols>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <!-- MCP SDK -->
+    <PackageReference Include="ModelContextProtocol.AspNetCore" Version="1.2.0" />
+
+    <!-- Google auth helpers -->
+    <PackageReference Include="Google.Apis.Gmail.v1" Version="1.55.0.2510" />
+
+    <!-- ASP.NET auth token helpers (used by UserDelegatedGmailCredentialProvider) -->
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.Abstractions" Version="2.2.0" />
+
+    <!-- Source linking for debuggability -->
+    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="8.0.0" PrivateAssets="All" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <!-- Email.Attachments is a project reference during development;
+         it becomes a NuGet package reference in the published package. -->
+    <ProjectReference Include="..\Email.Attachments\Email.Attachments.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="PACKAGE_README.md" Pack="true" PackagePath="/" />
+    <None Include="CHANGELOG.md" Pack="true" PackagePath="/" />
+  </ItemGroup>
+
+</Project>

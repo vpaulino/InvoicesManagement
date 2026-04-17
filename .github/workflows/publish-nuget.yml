@@ -13,7 +13,8 @@ on:
 
 env:
   DOTNET_VERSION: '10.0.x'
-  PROJECT_PATH: 'src/Email.Attachments/Email.Attachments.csproj'
+  ATTACHMENTS_PROJECT: 'src/Email.Attachments/Email.Attachments.csproj'
+  MCP_SERVER_PROJECT: 'src/Email.Attachments.McpServer/Email.Attachments.McpServer.csproj'
   PACKAGE_OUTPUT_DIR: ${{ github.workspace }}/output
   NUGET_SOURCE: https://api.nuget.org/v3/index.json
 
@@ -43,19 +44,34 @@ jobs:
         echo "VERSION=$VERSION" >> $GITHUB_OUTPUT
         echo "Package version: $VERSION"
     
-    - name: Restore dependencies
-      run: dotnet restore ${{ env.PROJECT_PATH }}
+    - name: Restore — Email.Attachments
+      run: dotnet restore ${{ env.ATTACHMENTS_PROJECT }}
+
+    - name: Restore — Email.Attachments.McpServer
+      run: dotnet restore ${{ env.MCP_SERVER_PROJECT }}
     
-    - name: Build
-      run: dotnet build ${{ env.PROJECT_PATH }} --configuration Release --no-restore /p:Version=${{ steps.version.outputs.VERSION }}
+    - name: Build — Email.Attachments
+      run: dotnet build ${{ env.ATTACHMENTS_PROJECT }} --configuration Release --no-restore /p:Version=${{ steps.version.outputs.VERSION }}
+
+    - name: Build — Email.Attachments.McpServer
+      run: dotnet build ${{ env.MCP_SERVER_PROJECT }} --configuration Release --no-restore /p:Version=${{ steps.version.outputs.VERSION }}
     
     - name: Run tests (if any)
       run: dotnet test --configuration Release --no-build --verbosity normal || echo "No tests found"
       continue-on-error: true
     
-    - name: Pack NuGet package
+    - name: Pack — Email.Attachments
       run: |
-        dotnet pack ${{ env.PROJECT_PATH }} \
+        dotnet pack ${{ env.ATTACHMENTS_PROJECT }} \
+          --configuration Release \
+          --no-build \
+          --output ${{ env.PACKAGE_OUTPUT_DIR }} \
+          /p:PackageVersion=${{ steps.version.outputs.VERSION }} \
+          /p:RepositoryCommit=${{ github.sha }}
+
+    - name: Pack — Email.Attachments.McpServer
+      run: |
+        dotnet pack ${{ env.MCP_SERVER_PROJECT }} \
           --configuration Release \
           --no-build \
           --output ${{ env.PACKAGE_OUTPUT_DIR }} \
@@ -64,7 +80,7 @@ jobs:
     
     - name: Display package contents
       run: |
-        echo "?? Generated packages:"
+        echo "Generated packages:"
         ls -lh ${{ env.PACKAGE_OUTPUT_DIR }}
     
     - name: Push to NuGet.org
