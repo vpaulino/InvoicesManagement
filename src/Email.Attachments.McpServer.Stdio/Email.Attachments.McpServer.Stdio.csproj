@@ -1,0 +1,38 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+
+    <!-- NuGet Package Metadata -->
+    <PackageId>Email.Attachments.McpServer.Stdio</PackageId>
+    <Version>1.0.0</Version>
+    <Authors>vpaulino</Authors>
+    <Company>vpaulino</Company>
+    <Product>Email.Attachments.McpServer.Stdio</Product>
+    <Description>Stdio transport integration for the Email.Attachments MCP server. Registers the Gmail MCP tools and configures the stdio MCP transport for use in console / CLI host applications.</Description>
+    <PackageTags>email;gmail;attachments;mcp;model-context-protocol;ai;llm;stdio;cli;console</PackageTags>
+    <PackageProjectUrl>https://github.com/vpaulino/InvoicesManagement</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/vpaulino/InvoicesManagement</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+
+    <!-- Build Configuration -->
+    <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
+    <EmbedUntrackedSources>true</EmbedUntrackedSources>
+    <IncludeSymbols>true</IncludeSymbols>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="8.0.0" PrivateAssets="All" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Email.Attachments.McpServer\Email.Attachments.McpServer.csproj" />
+  </ItemGroup>
+
+</Project>

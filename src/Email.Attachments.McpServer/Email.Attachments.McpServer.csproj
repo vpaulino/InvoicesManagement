@@ -1,0 +1,39 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+
+    <!-- NuGet Package Metadata -->
+    <PackageId>Email.Attachments.McpServer</PackageId>
+    <Version>1.0.0</Version>
+    <Authors>vpaulino</Authors>
+    <Company>vpaulino</Company>
+    <Product>Email.Attachments.McpServer</Product>
+    <Description>Host-agnostic MCP (Model Context Protocol) tool definitions for Gmail email attachment management. Exposes IEmailFilesManager operations as MCP tools that can be hosted in any MCP-compatible transport (ASP.NET Core, stdio, etc.).</Description>
+    <PackageTags>email;gmail;attachments;mcp;model-context-protocol;ai;llm;tools</PackageTags>
+    <PackageProjectUrl>https://github.com/vpaulino/InvoicesManagement</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/vpaulino/InvoicesManagement</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+
+    <!-- Build Configuration -->
+    <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
+    <EmbedUntrackedSources>true</EmbedUntrackedSources>
+    <IncludeSymbols>true</IncludeSymbols>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="ModelContextProtocol" Version="1.2.0" />
+    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="8.0.0" PrivateAssets="All" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Email.Attachments\Email.Attachments.csproj" />
+  </ItemGroup>
+
+</Project>

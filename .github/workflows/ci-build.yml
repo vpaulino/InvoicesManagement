@@ -5,16 +5,22 @@ on:
     branches: [ main, master, develop, features/** ]
     paths:
       - 'src/Email.Attachments/**'
+      - 'src/Email.Attachments.McpServer/**'
+      - 'src/Email.Attachments.McpServer.AspNetCore/**'
+      - 'src/Email.Attachments.McpServer.Stdio/**'
       - '.github/workflows/ci-build.yml'
   pull_request:
     branches: [ main, master, develop ]
     paths:
       - 'src/Email.Attachments/**'
+      - 'src/Email.Attachments.McpServer/**'
+      - 'src/Email.Attachments.McpServer.AspNetCore/**'
+      - 'src/Email.Attachments.McpServer.Stdio/**'
       - '.github/workflows/ci-build.yml'
 
 env:
   DOTNET_VERSION: '10.0.x'
-  PROJECT_PATH: 'src/Email.Attachments/Email.Attachments.csproj'
+  SOLUTION_PATH: 'ConsolidateEmailFiles.sln'
 
 jobs:
   build:
@@ -30,17 +36,26 @@ jobs:
         dotnet-version: ${{ env.DOTNET_VERSION }}
     
     - name: Restore dependencies
-      run: dotnet restore ${{ env.PROJECT_PATH }}
+      run: dotnet restore ${{ env.SOLUTION_PATH }}
     
     - name: Build
-      run: dotnet build ${{ env.PROJECT_PATH }} --configuration Release --no-restore
+      run: dotnet build ${{ env.SOLUTION_PATH }} --configuration Release --no-restore
     
     - name: Run tests
-      run: dotnet test --configuration Release --no-build --verbosity normal || echo "No tests found"
+      run: dotnet test ${{ env.SOLUTION_PATH }} --configuration Release --no-build --verbosity normal || echo "No tests found"
       continue-on-error: true
     
-    - name: Pack (validation only)
-      run: dotnet pack ${{ env.PROJECT_PATH }} --configuration Release --no-build --output ./artifacts
+    - name: Pack Email.Attachments (validation only)
+      run: dotnet pack src/Email.Attachments/Email.Attachments.csproj --configuration Release --no-build --output ./artifacts
+
+    - name: Pack Email.Attachments.McpServer (validation only)
+      run: dotnet pack src/Email.Attachments.McpServer/Email.Attachments.McpServer.csproj --configuration Release --no-build --output ./artifacts
+
+    - name: Pack Email.Attachments.McpServer.AspNetCore (validation only)
+      run: dotnet pack src/Email.Attachments.McpServer.AspNetCore/Email.Attachments.McpServer.AspNetCore.csproj --configuration Release --no-build --output ./artifacts
+
+    - name: Pack Email.Attachments.McpServer.Stdio (validation only)
+      run: dotnet pack src/Email.Attachments.McpServer.Stdio/Email.Attachments.McpServer.Stdio.csproj --configuration Release --no-build --output ./artifacts
     
     - name: Upload build artifacts
       uses: actions/upload-artifact@v4

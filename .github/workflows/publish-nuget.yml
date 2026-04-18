@@ -13,7 +13,7 @@ on:
 
 env:
   DOTNET_VERSION: '10.0.x'
-  PROJECT_PATH: 'src/Email.Attachments/Email.Attachments.csproj'
+  SOLUTION_PATH: 'ConsolidateEmailFiles.sln'
   PACKAGE_OUTPUT_DIR: ${{ github.workspace }}/output
   NUGET_SOURCE: https://api.nuget.org/v3/index.json
 
@@ -44,23 +44,29 @@ jobs:
         echo "Package version: $VERSION"
     
     - name: Restore dependencies
-      run: dotnet restore ${{ env.PROJECT_PATH }}
+      run: dotnet restore ${{ env.SOLUTION_PATH }}
     
     - name: Build
-      run: dotnet build ${{ env.PROJECT_PATH }} --configuration Release --no-restore /p:Version=${{ steps.version.outputs.VERSION }}
+      run: dotnet build ${{ env.SOLUTION_PATH }} --configuration Release --no-restore /p:Version=${{ steps.version.outputs.VERSION }}
     
     - name: Run tests (if any)
-      run: dotnet test --configuration Release --no-build --verbosity normal || echo "No tests found"
+      run: dotnet test ${{ env.SOLUTION_PATH }} --configuration Release --no-build --verbosity normal || echo "No tests found"
       continue-on-error: true
     
-    - name: Pack NuGet package
+    - name: Pack NuGet packages
       run: |
-        dotnet pack ${{ env.PROJECT_PATH }} \
-          --configuration Release \
-          --no-build \
-          --output ${{ env.PACKAGE_OUTPUT_DIR }} \
-          /p:PackageVersion=${{ steps.version.outputs.VERSION }} \
-          /p:RepositoryCommit=${{ github.sha }}
+        for proj in \
+          src/Email.Attachments/Email.Attachments.csproj \
+          src/Email.Attachments.McpServer/Email.Attachments.McpServer.csproj \
+          src/Email.Attachments.McpServer.AspNetCore/Email.Attachments.McpServer.AspNetCore.csproj \
+          src/Email.Attachments.McpServer.Stdio/Email.Attachments.McpServer.Stdio.csproj; do
+          dotnet pack "$proj" \
+            --configuration Release \
+            --no-build \
+            --output ${{ env.PACKAGE_OUTPUT_DIR }} \
+            /p:PackageVersion=${{ steps.version.outputs.VERSION }} \
+            /p:RepositoryCommit=${{ github.sha }}
+        done
     
     - name: Display package contents
       run: |

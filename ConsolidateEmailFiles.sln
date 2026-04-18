@@ -9,6 +9,12 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Email.Attachments", "src\Em
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConsolidateEmailInvoices", "src\ConsolidateEmailInvoices\ConsolidateEmailInvoices.csproj", "{16A51FE2-B5D8-AE3E-84C3-197323C675D8}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Email.Attachments.McpServer", "src\Email.Attachments.McpServer\Email.Attachments.McpServer.csproj", "{A1B2C3D4-E5F6-7890-ABCD-EF1234567890}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Email.Attachments.McpServer.AspNetCore", "src\Email.Attachments.McpServer.AspNetCore\Email.Attachments.McpServer.AspNetCore.csproj", "{B2C3D4E5-F6A7-8901-BCDE-F12345678901}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Email.Attachments.McpServer.Stdio", "src\Email.Attachments.McpServer.Stdio\Email.Attachments.McpServer.Stdio.csproj", "{C3D4E5F6-A7B8-9012-CDEF-123456789012}"
+EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{ED23ECCC-A71C-4583-9650-0FC815F0CC37}"
 	ProjectSection(SolutionItems) = preProject
 		.github\workflows\ci-build.yml = .github\workflows\ci-build.yml
@@ -29,6 +35,18 @@ Global
 		{16A51FE2-B5D8-AE3E-84C3-197323C675D8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{16A51FE2-B5D8-AE3E-84C3-197323C675D8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{16A51FE2-B5D8-AE3E-84C3-197323C675D8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A1B2C3D4-E5F6-7890-ABCD-EF1234567890}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A1B2C3D4-E5F6-7890-ABCD-EF1234567890}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A1B2C3D4-E5F6-7890-ABCD-EF1234567890}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A1B2C3D4-E5F6-7890-ABCD-EF1234567890}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B2C3D4E5-F6A7-8901-BCDE-F12345678901}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B2C3D4E5-F6A7-8901-BCDE-F12345678901}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B2C3D4E5-F6A7-8901-BCDE-F12345678901}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B2C3D4E5-F6A7-8901-BCDE-F12345678901}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C3D4E5F6-A7B8-9012-CDEF-123456789012}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C3D4E5F6-A7B8-9012-CDEF-123456789012}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C3D4E5F6-A7B8-9012-CDEF-123456789012}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C3D4E5F6-A7B8-9012-CDEF-123456789012}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -36,6 +54,9 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{371CBDFA-317D-81DF-FD1E-C7E37E497D08} = {170B8542-D79C-4DFB-B111-A5BAB9028B9C}
 		{16A51FE2-B5D8-AE3E-84C3-197323C675D8} = {170B8542-D79C-4DFB-B111-A5BAB9028B9C}
+		{A1B2C3D4-E5F6-7890-ABCD-EF1234567890} = {170B8542-D79C-4DFB-B111-A5BAB9028B9C}
+		{B2C3D4E5-F6A7-8901-BCDE-F12345678901} = {170B8542-D79C-4DFB-B111-A5BAB9028B9C}
+		{C3D4E5F6-A7B8-9012-CDEF-123456789012} = {170B8542-D79C-4DFB-B111-A5BAB9028B9C}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {1DD3CAEB-83C2-47FB-BA8B-3A9A7BA1723E}
