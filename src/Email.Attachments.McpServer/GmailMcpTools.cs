@@ -82,10 +82,27 @@ public sealed class GmailMcpTools
         [Description("Start date in yyyy-MM-dd format (inclusive).")] string startDate,
         [Description("End date in yyyy-MM-dd format (exclusive).")] string endDate)
     {
-        var period = TimePeriod.Custom(
-            DateTime.Parse(startDate, System.Globalization.CultureInfo.InvariantCulture),
-            DateTime.Parse(endDate, System.Globalization.CultureInfo.InvariantCulture));
+        if (!DateTime.TryParseExact(startDate, "yyyy-MM-dd",
+                System.Globalization.CultureInfo.InvariantCulture,
+                System.Globalization.DateTimeStyles.None,
+                out var parsedStart))
+        {
+            throw new ArgumentException(
+                $"Invalid startDate '{startDate}'. Expected format: yyyy-MM-dd (e.g. 2024-01-31).",
+                nameof(startDate));
+        }
 
-        return await _emailFilesManager.FetchEmailFilesByPeriodAsync(period);
+        if (!DateTime.TryParseExact(endDate, "yyyy-MM-dd",
+                System.Globalization.CultureInfo.InvariantCulture,
+                System.Globalization.DateTimeStyles.None,
+                out var parsedEnd))
+        {
+            throw new ArgumentException(
+                $"Invalid endDate '{endDate}'. Expected format: yyyy-MM-dd (e.g. 2024-02-28).",
+                nameof(endDate));
+        }
+
+        return await _emailFilesManager.FetchEmailFilesByPeriodAsync(
+            TimePeriod.Custom(parsedStart, parsedEnd));
     }
 }
